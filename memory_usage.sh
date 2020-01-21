@@ -1,7 +1,7 @@
 #!/bin/sh
 ramusage=$(free | awk '/Mem/{printf("RAM Usage: %.2f\n"), $3/$2*100}'| awk '{print $3}')
 
-if [ "$ramusage" > 10 ]; then
+if [ "$ramusage" > 50 ]; then
 
 SUBJECT="ATTENTION: Memory Utilization is High on $(hostname) at $(date)"
 
@@ -35,4 +35,4 @@ TO="mhdkhalif.matzain@myeg.com.my"
 
   rm /tmp/Mail.out
 
-  fi
+fi
