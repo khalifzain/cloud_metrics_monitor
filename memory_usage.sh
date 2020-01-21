@@ -4,15 +4,15 @@ ram_usage=$(free -m | awk 'NR==2{printf "Memory Usage: %s/%sMB (%.2f%%)\n", $3,$
 disk_usage=$(df -h | awk '$NF=="/"{printf "Disk Usage: %d/%dGB (%s)\n", $3,$2,$5}')
 cpu_usage=$(top -bn1 | grep load | awk '{printf "CPU Load: %.2f\n", $(NF-2)}')
 
-if [ "$ram_current" > 50 ]; then
+if [ "${ram_current%.*}" -lt 50 ]; then
 
-SUBJECT="ATTENTION: Memory Utilization is High for $(hostname) at $(date): Memory Usage is $ram_current %"
+SUBJECT="ATTENTION: Memory Utilization is $ram_current % for $(hostname) at $(date)"
 
 MESSAGE="/tmp/Mail.out"
 
 TO="mhdkhalif.matzain@myeg.com.my"
 
-  echo "Current System Resource Utilization Is: \n\n $ram_usage \n $disk_usage \n $cpu_usage" >> $MESSAGE
+  echo "Current System Resource Utilization Is:\n\n $ram_usage \n $disk_usage \n $cpu_usage" >> $MESSAGE
 
   echo "" >> $MESSAGE
 
@@ -28,11 +28,16 @@ TO="mhdkhalif.matzain@myeg.com.my"
 
   echo "------------------------------------------------------------------" >> $MESSAGE
 
-  echo "Top Memory Consuming Process Using ps command" >> $MESSAGE
+  echo "Last 20 Lines of Syslog" >> $MESSAGE
 
   echo "------------------------------------------------------------------" >> $MESSAGE
 
-  echo "$(ps -eo pid,ppid,%mem,%cpu,cmd --sort=-%mem | head)" >> $MESSAGE
+  echo "$(tail -n 20 /var/log/syslog)" >> $MESSAGE
+
+  echo "" >> $MESSAGE
+
+  echo "------------------------------------------------------------------" >> $MESSAGE
+
 
   mail -s "$SUBJECT" "$TO" < $MESSAGE
 
