@@ -10,7 +10,7 @@ SUBJECT="ATTENTION: Memory Utilization is $ram_current % for $(hostname) at $(da
 
 MESSAGE="/tmp/Mail.out"
 
-TO="mhdkhalif.matzain@myeg.com.my"
+TO="cm.gan@myeg.com.my"
 
   echo "Current System Resource Utilization Is:\n\n $ram_usage \n $disk_usage \n $cpu_usage" >> $MESSAGE
 
